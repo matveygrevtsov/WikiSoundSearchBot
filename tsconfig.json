@@ -4,12 +4,13 @@
     "outDir": "./app-version-without-typescript",
     "module": "CommonJS",
     "esModuleInterop": true,
-    "target": "es6",
+    "target": "ES6",
     "moduleResolution": "node",
     "skipLibCheck": true
   },
   "lib": ["es2015"],
   "ts-node": {
     "esm": true
-  }
+  },
+  "exclude": ["./webpack.config.ts"]
 }
