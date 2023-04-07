@@ -4,9 +4,8 @@
   "description": "",
   "main": "./build/index.js",
   "scripts": {
-    "start": "webpack && node ./build/index.js",
-    "build": "webpack",
-    "dev": "tsc && nodemon ./src/index.ts",
+    "start": "tsc && webpack && node ./build/index.js",
+    "build": "tsc && webpack",
     "format": "yarn prettier --write ./src",
     "postinstall": "husky install"
   },
@@ -14,9 +13,9 @@
   "license": "ISC",
   "devDependencies": {
     "@types/node": "^18.15.11",
+    "@types/webpack": "^5.28.1",
     "dotenv-webpack": "^8.0.1",
     "husky": "^8.0.3",
-    "nodemon": "^2.0.22",
     "prettier": "^2.8.7",
     "ts-loader": "^9.4.2",
     "ts-node": "^10.9.1",
@@ -25,7 +24,6 @@
     "webpack-cli": "^5.0.1"
   },
   "dependencies": {
-    "dotenv": "^16.0.3",
     "telegraf": "^4.12.2"
   }
 }
