@@ -6,3 +6,7 @@
 # production
 /build
 /app-version-without-typescript
+
+# secret envs
+/src/.env
+
