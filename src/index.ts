@@ -1,11 +1,11 @@
 import { Telegraf } from "telegraf";
-import { wikipedia } from "./controllers/wikipedia";
+import { messageHandler } from "./controllers/messageHandler";
 
 const bot = new Telegraf(process.env.BOT_TOKEN);
 
 bot.start((ctx) => ctx.reply("Начинаем!"));
 
-bot.on("message", wikipedia);
+bot.on("message", messageHandler);
 
 bot.launch();
 
