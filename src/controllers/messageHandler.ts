@@ -1,4 +1,6 @@
 import axios from "axios";
+import { cutText } from "../utils/cutText";
+import { mapTextToAudioFile } from "../utils/mapTextToAudioFile";
 
 const wikipediaAxiosRequestConfig = {
   format: "json",
@@ -9,7 +11,7 @@ const wikipediaAxiosRequestConfig = {
   redirects: 1,
 };
 
-export async function wikipedia(ctx: any) {
+export async function messageHandler(ctx: any) {
   const messageText: string = ctx.message.text;
   const wikipediaResponse = await axios.get(
     "https://ru.wikipedia.org/w/api.php",
@@ -31,7 +33,14 @@ export async function wikipedia(ctx: any) {
 
   const pageKey = Object.keys(pages)[0];
   const page = pages[pageKey];
-  const text = page.extract.replaceAll("\n", " ");
+  const text = cutText(page.extract);
 
-  ctx.reply(text);
+  try {
+    const audioFile = await mapTextToAudioFile(text);
+    ctx.sendVoice({
+      source: audioFile,
+    });
+  } catch (error) {
+    ctx.reply(`Что-то пошло не так. ${JSON.stringify(error)}`);
+  }
 }
