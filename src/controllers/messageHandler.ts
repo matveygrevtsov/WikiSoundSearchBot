@@ -37,9 +37,6 @@ export async function messageHandler(ctx: any) {
 
   try {
     const audioFile = await mapTextToAudioFile(text);
-    // ctx.replyWithAudio({
-    //   content: audioFile,
-    // });
     ctx.sendVoice({
       source: audioFile,
     });
