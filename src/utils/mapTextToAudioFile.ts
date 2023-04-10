@@ -1,13 +1,13 @@
 import axios from "axios";
 
-export function mapTextToAudioFile(text: string) {
+export async function mapTextToAudioFile(text: string) {
   const urlSearchParams = new URLSearchParams({
     text,
     voice: "filipp",
     folderId: process.env.YANDEX_FOLDER_ID,
   });
 
-  return axios.post(
+  const result = await axios.post(
     "https://tts.api.cloud.yandex.net/speech/v1/tts:synthesize",
     urlSearchParams,
     {
@@ -17,4 +17,6 @@ export function mapTextToAudioFile(text: string) {
       responseType: "arraybuffer",
     }
   );
+
+  return result.data;
 }
