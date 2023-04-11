@@ -1,46 +1,45 @@
-import axios from "axios";
-import { cutText } from "../utils/cutText";
 import { mapTextToAudioFile } from "../utils/mapTextToAudioFile";
+import { getDefinitionTextFromWikipedia } from "../utils/getDefinitionTextFromWikipedia";
 
-const wikipediaAxiosRequestConfig = {
-  format: "json",
-  action: "query",
-  prop: "extracts",
-  exintro: "",
-  explaintext: "",
-  redirects: 1,
-};
+enum ErrorText {
+  WikipediaError = "Произошла ошибка при запросе в Википедию.",
+  WikipediaNotFound = "К сожалению, Википедия не смогла найти определение по запросу",
+  YandexSpeechkitError = "Произошла ошибка при запросе в yandex speechkit",
+  TelegrafSendVoiceMessageError = "К сожалению, боту не удалось отправить вам голосовое сообщение.",
+}
 
 export async function messageHandler(ctx: any) {
   const messageText: string = ctx.message.text;
-  const wikipediaResponse = await axios.get(
-    "https://ru.wikipedia.org/w/api.php",
-    {
-      params: {
-        ...wikipediaAxiosRequestConfig,
-        titles: messageText,
-      },
-    }
-  );
-  const { pages } = wikipediaResponse.data.query;
-
-  if (pages["-1"]) {
-    ctx.reply(
-      `К сожалению, в Википедии по запросу "${messageText}" ничего найти не удалось.`
-    );
-    return;
-  }
-
-  const pageKey = Object.keys(pages)[0];
-  const page = pages[pageKey];
-  const text = cutText(page.extract);
+  let definitionTextFromWikipedia: string | null = null;
 
   try {
-    const audioFile = await mapTextToAudioFile(text);
+    definitionTextFromWikipedia = await getDefinitionTextFromWikipedia(
+      messageText
+    );
+  } catch (error) {
+    console.error(error);
+    return ctx.reply(ErrorText.WikipediaError);
+  }
+
+  if (!definitionTextFromWikipedia) {
+    return ctx.reply(`${ErrorText.WikipediaNotFound}: "${messageText}"`);
+  }
+
+  let audioFile: any;
+
+  try {
+    audioFile = await mapTextToAudioFile(definitionTextFromWikipedia);
+  } catch (error) {
+    console.error(error);
+    return ctx.reply(ErrorText.YandexSpeechkitError);
+  }
+
+  try {
     ctx.sendVoice({
       source: audioFile,
     });
   } catch (error) {
-    ctx.reply(`Что-то пошло не так. ${JSON.stringify(error)}`);
+    console.error(error);
+    ctx.reply(ErrorText.TelegrafSendVoiceMessageError);
   }
 }

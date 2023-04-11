@@ -1,5 +1,9 @@
 import axios from "axios";
 
+/**
+ * Преобразует текст в аудиофайл.
+ * @param text - текст, который будет преобразован в аудиофайл.
+ */
 export async function mapTextToAudioFile(text: string) {
   const urlSearchParams = new URLSearchParams({
     text,
