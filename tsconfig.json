@@ -6,7 +6,8 @@
     "esModuleInterop": true,
     "target": "ES2021",
     "moduleResolution": "node",
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "removeComments": true
   },
   "lib": ["es2015"],
   "ts-node": {
