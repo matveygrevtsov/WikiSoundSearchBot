@@ -1,15 +1,13 @@
 import { mapTextToAudioFile } from "../utils/mapTextToAudioFile";
 import { getDefinitionTextFromWikipedia } from "../utils/getDefinitionTextFromWikipedia";
-
-enum ErrorText {
-  WikipediaError = "Произошла ошибка при запросе в Википедию.",
-  WikipediaNotFound = "К сожалению, Википедия не смогла найти определение по запросу",
-  YandexSpeechkitError = "Произошла ошибка при запросе в yandex speechkit",
-  TelegrafSendVoiceMessageError = "К сожалению, боту не удалось отправить вам голосовое сообщение.",
-}
+import { texts } from "../texts";
 
 export async function messageHandler(ctx: any) {
   const messageText: string = ctx.message.text;
+
+  if (typeof messageText !== "string")
+    return ctx.reply(texts.errors.notATextMessage);
+
   let definitionTextFromWikipedia: string | null = null;
 
   try {
@@ -18,11 +16,11 @@ export async function messageHandler(ctx: any) {
     );
   } catch (error) {
     console.error(error);
-    return ctx.reply(ErrorText.WikipediaError);
+    return ctx.reply(texts.errors.wikipediaError);
   }
 
   if (!definitionTextFromWikipedia) {
-    return ctx.reply(`${ErrorText.WikipediaNotFound}: "${messageText}"`);
+    return ctx.reply(`${texts.errors.wikipediaNotFound}: "${messageText}"`);
   }
 
   let audioFile: any;
@@ -31,7 +29,7 @@ export async function messageHandler(ctx: any) {
     audioFile = await mapTextToAudioFile(definitionTextFromWikipedia);
   } catch (error) {
     console.error(error);
-    return ctx.reply(ErrorText.YandexSpeechkitError);
+    return ctx.reply(texts.errors.yandexSpeechkitError);
   }
 
   try {
@@ -40,6 +38,6 @@ export async function messageHandler(ctx: any) {
     });
   } catch (error) {
     console.error(error);
-    ctx.reply(ErrorText.TelegrafSendVoiceMessageError);
+    ctx.reply(texts.errors.telegrafSendVoiceMessageError);
   }
 }
