@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config({ path: `${__dirname}/.env` });
 import axios from "axios";
 
 /**
@@ -5,6 +7,7 @@ import axios from "axios";
  * @param text - текст, который будет преобразован в аудиофайл.
  */
 export async function mapTextToAudioFile(text: string) {
+  const yandexIamToken = process.env.YANDEX_IAM_TOKEN || "";
   const urlSearchParams = new URLSearchParams({
     text,
     voice: "filipp",
@@ -16,7 +19,7 @@ export async function mapTextToAudioFile(text: string) {
     urlSearchParams,
     {
       headers: {
-        Authorization: `Bearer ${process.env.YANDEX_TOKEN}`,
+        Authorization: `Bearer ${yandexIamToken}`,
       },
       responseType: "arraybuffer",
     }

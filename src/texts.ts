@@ -8,5 +8,6 @@ export const texts = {
     telegrafSendVoiceMessageError:
       "К сожалению, боту не удалось отправить вам голосовое сообщение.",
     notATextMessage: "Пожалуйста, отправьте текстовое сообщение.",
+    yandexGenerateIamTokenError: "Не удалось сгенерировать IAM-токен.",
   },
 };
